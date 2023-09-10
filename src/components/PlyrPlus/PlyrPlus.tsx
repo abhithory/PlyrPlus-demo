@@ -1,8 +1,16 @@
-import React from 'react'
+import { VideoChapter } from '@/utils/type/PlyrPlus';
+import React from 'react';
 
-function PlyrPlus() {
+type PlayerPlusProps = {
+    source: string;
+    chapters?: VideoChapter[]
+}
+
+function PlyrPlus({ source, chapters }: PlayerPlusProps) {
     return (
-        <div>PlyrPlus</div>
+        <div>
+
+        </div>
     )
 }
 
