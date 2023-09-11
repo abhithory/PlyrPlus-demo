@@ -2,6 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { VideoChapter } from '@/utils/type/PlyrPlus';
 
+import Hls from 'hls.js';
+
+
 type PlayerPlusProps = {
     source: string;
     chapters?: VideoChapter[]
@@ -198,6 +201,24 @@ function PlyrPlus({ source, chapters }: PlayerPlusProps) {
         if (!hoverTimeIndicator) return
         hoverTimeIndicator.style.display = "none";
     };
+
+
+    useEffect(() => {
+        if (!videoRef.current) return
+
+
+
+        if (Hls.isSupported() && source.endsWith("m3u8")) {
+            const hls = new Hls();
+            hls.loadSource(source);
+            hls.attachMedia(videoRef.current);
+        }
+
+
+        return () => {
+
+        };
+    }, [videoRef]);
 
 
 
