@@ -30,15 +30,14 @@ function Controls({ videoRef, chapters }: ControlsProps) {
     return (
         <div className="video-controls">
             <Seekbar duration={duration} currentTime={currentTime} videoRef={videoRef} chapters={chapters} />
-
-            <div className="other-controls">
+            {/* <div className="other-controls">
                 <button onClick={togglePlayPause}>
                     {isPlaying ? "Pause" : "Play"}
                 </button>
-                {/* <p>
+                <p>
                     Chapter: {chapters && chapters[currentChapterIndex].chapterName || 0}
-                </p> */}
-            </div>
+                </p>
+            </div> */}
         </div>
     )
 }
