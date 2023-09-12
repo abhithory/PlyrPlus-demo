@@ -1,5 +1,3 @@
-import React, { useRef, useState } from 'react'
-import { formatTimeToString, stringTimeToSeconds } from '../utils/helper';
 import { VideoChapter } from '@/utils/type/PlyrPlus';
 import Seekbar from './Seekbar';
 
@@ -9,13 +7,15 @@ type ControlsProps = {
     chapters?: VideoChapter[];
     currentTime: number;
     setCurrentTime: (newTime: number) => void;
+    isControlsVisible: boolean;
 }
 
-function Controls({ videoRef, chapters, currentTime, setCurrentTime }: ControlsProps) {
+function Controls({ videoRef, chapters, currentTime, setCurrentTime, isControlsVisible }: ControlsProps) {
     const duration = videoRef?.current?.duration || 0;
 
     return (
-        <div className="video-controls">
+        <div className={`video-controls ${!isControlsVisible && "hidden"}`}>
+
             <Seekbar duration={duration} currentTime={currentTime} videoRef={videoRef} chapters={chapters} setCurrentTime={setCurrentTime} />
         </div>
     )

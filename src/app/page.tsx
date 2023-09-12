@@ -1,7 +1,8 @@
-import ForkVideoPlyr from '@/components/Forking/ForkPlyr';
+"use client"
 import PlyrPlus from '@/components/PlyrPlus/PlyrPlus'
 import { VideoChapter } from '@/utils/type/PlyrPlus';
 import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react';
 
 
 
@@ -52,23 +53,76 @@ const chaptersData: VideoChapter[] = [
 
 export default function Home() {
 
+  const urlInputRef = useRef<HTMLInputElement>(null)
+  const allChaptersRef = useRef<HTMLTextAreaElement>(null)
+
 
   const source = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-  const source2 = "https://edge.mhq.12core.net/577a146148b5fabf20eea2cf2ab8659b.m3u8"
-
-  const source3 = "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
 
   const source4 = "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8";
 
+  const [sourceURL, setSourceURL] = useState(source);
 
-  const source5 = "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/low.mp4";
+  const [shouldPlay, setShouldPlay] = useState(false);
+  const [allChapters, setAllChapters] = useState(chaptersData)
+
+  useEffect(() => {
+    setShouldPlay(true)
+  }, [shouldPlay])
+
   return (
     <main className="">
-      <h1>PlyrPlus</h1>
-      <PlyrPlus source={source} chapters={chaptersData} />
+      <div className="flex flex-col  items-center mb-4">
+        <h1 className='text_heading_size mt-6 mb-12'>PlyrPlus</h1>
+      </div>
 
-      {/* <h1>Fork Plyr</h1>
-      <ForkVideoPlyr source={source5} chapters={chaptersData} /> */}
+      {shouldPlay &&
+        <PlyrPlus source={sourceURL} chapters={allChapters} />
+      }
+
+      <div className="flex flex-col  items-center mt-12">
+
+        <label htmlFor="">Video URL</label>
+        <div className="flex gap-4 w-8/12">
+
+          <input defaultValue={sourceURL} type="text" className='input_1' ref={urlInputRef} />
+          <button className='btn_1_2' onClick={() => {
+            setShouldPlay(false)
+
+            if (urlInputRef?.current?.value) {
+              setSourceURL(urlInputRef?.current?.value)
+              setTimeout(() => {
+                setShouldPlay(true)
+              }, 0);
+            }
+          }}>Play</button>
+        </div>
+      </div>
+
+
+      <div className="mt-4 " >
+        <div className="flex gap-4 items-center justify-center flex-col">
+          <div className="flex flex-col gap-2 w-8/12">
+
+            <p className="text-primary">**Please update chapters according to this format</p>
+            <label htmlFor="">Chapters Details</label>
+            <textarea className='input_1 min-h-[8rem]' ref={allChaptersRef} defaultValue={JSON.stringify(allChapters)} />
+            <div className="">
+
+              <button className='btn_1_2' onClick={() => {
+                setShouldPlay(false)
+
+                if (allChaptersRef?.current?.value) {
+                  setAllChapters(JSON.parse(allChaptersRef?.current?.value) as VideoChapter[])
+                  setTimeout(() => {
+                    setShouldPlay(true)
+                  }, 0);
+                }
+              }}>Updates Chapters</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </main>
   )

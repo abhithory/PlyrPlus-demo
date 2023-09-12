@@ -1,14 +1,13 @@
-/* CSS Styles */
-.video-player {
+.plyrPlus__container {
   max-width: 800px;
   margin: 0 auto;
   position: relative;
 }
-video {
+.plyrPlus__container video {
   width: 100%;
 }
 
-video::-webkit-media-controls-play-button,
+.plyrPlus__container video::-webkit-media-controls-play-button,
 video::-webkit-media-controls-pause-button,
 video::-webkit-media-controls-seek-back-button,
 video::-webkit-media-controls-seek-forward-button {
@@ -16,12 +15,12 @@ video::-webkit-media-controls-seek-forward-button {
 }
 
 /* Style the custom seek bar */
-video::-webkit-media-controls-current-time-display,
+.plyrPlus__container video::-webkit-media-controls-current-time-display,
 video::-webkit-media-controls-time-remaining-display {
   color: white;
 }
 
-video::-webkit-media-controls-timeline {
+.plyrPlus__container video::-webkit-media-controls-timeline {
   display: none;
   /* opacity: 0.8; */
 }
@@ -31,7 +30,7 @@ video::-webkit-media-controls-timeline {
   padding-bottom: 1rem;
 } */
 
-video::-webkit-media-controls-panel {
+.plyrPlus__container video::-webkit-media-controls-panel {
   padding-bottom: 1rem;
   z-index: 1;
 }
@@ -45,7 +44,22 @@ video::-webkit-media-controls-panel {
   justify-content: end;
   align-items: center;
   margin-bottom: 1rem;
+  opacity: 1;
+  transition: all 0.4s ease-in-out; /* Adjust duration and timing function as needed */
 }
+
+.plyrPlus__buffering_container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.video-controls.hidden {
+  opacity: 0;
+  pointer-events: none; /* Prevent interactions when hidden */
+}
+
 .seekbar-container {
   width: 96%;
   height: 4px;
@@ -112,7 +126,7 @@ p {
 }
 
 .hover-time-indicator {
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -128,4 +142,38 @@ p {
 
   font-size: 0.64rem;
   white-space: nowrap;
+}
+
+/* Loader */
+.plyrPlus__loader {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: plyrPlus__rotation 1s linear infinite;
+}
+.plyrPlus__loader::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-bottom-color: #ff3d00;
+}
+
+@keyframes plyrPlus__rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

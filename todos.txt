@@ -3,5 +3,5 @@
 - full screen fix
 - add chapter icon and show popup
 
-
+- dont use direct getElement. use states
 - add video quality
