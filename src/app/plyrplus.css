@@ -35,6 +35,42 @@ video::-webkit-media-controls-time-remaining-display {
   z-index: 1;
 }
 
+.plyrPlus__currentchapter_container {
+  transition: all 0.4s ease-in-out; /* Adjust duration and timing function as needed */
+
+  gap: 0.2rem;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.9)
+  );
+  height: 4rem;
+  padding: 0.4rem 0 0 0.8rem;
+
+  & div {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  & p {
+    font-size: 1rem;
+  }
+
+  & span {
+    font-size: 2rem;
+    line-height: 0;
+  }
+}
+
 .video-controls {
   position: absolute;
   bottom: 0;

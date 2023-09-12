@@ -8,10 +8,11 @@ type ControlsProps = {
     duration: number;
     currentTime: number;
     setCurrentTime: (newTime: number) => void;
+    setCurrentChapterIndex: (index: number) => void;
+
 }
 
-function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime }: ControlsProps) {
-    const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
+function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime, setCurrentChapterIndex }: ControlsProps) {
     const isDraggingRef = useRef(false); // Use a ref for dragging state
     const maxChapterIndex = chapters?.length && chapters.length - 1 || 0;
 
@@ -43,11 +44,6 @@ function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime }: 
         const leftPosition = offsetX - indicatorWidth / 2;
         hoverTimeIndicator.style.left = `${leftPosition}px`;
     };
-
-
-
-
-
 
 
     const getChapeterLengthPercent = (index: number) => {
@@ -118,8 +114,7 @@ function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime }: 
         const offsetX = e.clientX - boundingRect.left;
         const clickX = offsetX / boundingRect.width;
         const newTime = clickX * duration;
-        videoRef.current.currentTime = newTime;
-        setCurrentTime(newTime); // Update the current time in real-time
+        seekToTime(newTime)
     };
 
 
@@ -137,8 +132,8 @@ function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime }: 
 
     const handleOnMouseUp = () => {
         isDraggingRef.current = false;
-        document.removeEventListener("mousemove", handleOnMouseMove);
         document.removeEventListener("mouseup", handleOnMouseUp);
+        document.removeEventListener("mousemove", handleOnMouseMove);
     };
 
     const handleOnMouseDown = () => {
@@ -155,13 +150,20 @@ function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime }: 
         const offsetX = e.clientX - boundingRect.left;
         const clickX = offsetX / boundingRect.width;
         const newTime = clickX * duration;
+        seekToTime(newTime)
+        isDraggingRef.current = false;
+    };
+
+    const seekToTime = (newTime: number) => {
+        if (!videoRef?.current) return
+
         videoRef.current.currentTime = newTime;
         setCurrentTime(newTime); // Update the current time in real-time
 
 
         const index = getChapterIndexFromSecounds(newTime);
         setCurrentChapterIndex(index >= 0 ? index : 0);
-    };
+    }
 
 
     return (
@@ -169,6 +171,7 @@ function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime }: 
             className="seekbar-container"
             id="seekbar_container"
             onClick={handleOnClickSeek}
+
             onMouseDown={handleOnMouseDown}
             onMouseMove={handleOnMouseMove}
             onMouseUp={handleOnMouseUp}
