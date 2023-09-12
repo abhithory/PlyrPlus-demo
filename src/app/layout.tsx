@@ -1,4 +1,5 @@
 import './globals.css'
+import './plyrplus.css'
 
 import 'vidstack/styles/defaults.css';
 import 'vidstack/styles/community-skin/video.css';

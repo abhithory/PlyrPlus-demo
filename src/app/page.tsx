@@ -1,5 +1,4 @@
 import ForkVideoPlyr from '@/components/Forking/ForkPlyr';
-import VideoPlyr from '@/components/Plyr/Plyr';
 import PlyrPlus from '@/components/PlyrPlus/PlyrPlus'
 import { VideoChapter } from '@/utils/type/PlyrPlus';
 import Image from 'next/image'
@@ -60,22 +59,17 @@ export default function Home() {
   const source3 = "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
 
   const source4 = "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8";
+
+
+  const source5 = "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/low.mp4";
   return (
     <main className="">
-      {/* <h1>PlyrPlus</h1> */}
+      <h1>PlyrPlus</h1>
+      <PlyrPlus source={source} chapters={chaptersData} />
 
-      {/* <PlyrPlus source={source} chapters={chaptersData} /> */}
-
-      {/* <h1>Plyr</h1>
-      <VideoPlyr source={source4} chapters={chaptersData} />
- */}
-
-
-      <h1>Fork Plyr</h1>
-      <ForkVideoPlyr source={source} chapters={chaptersData} />
+      {/* <h1>Fork Plyr</h1>
+      <ForkVideoPlyr source={source5} chapters={chaptersData} /> */}
 
     </main>
   )
 }
-
-// plyr__progress
