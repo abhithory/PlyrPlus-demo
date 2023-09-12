@@ -13,7 +13,7 @@ type PlayerPlusProps = {
 
 function PlyrPlus({ source, chapters }: PlayerPlusProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
-
+    const [currentTime, setCurrentTime] = useState(videoRef?.current?.currentTime || 0)
 
 
 
@@ -34,14 +34,20 @@ function PlyrPlus({ source, chapters }: PlayerPlusProps) {
     // }, [videoRef]);
 
 
+    const handleTimeUpdate = () => {
+
+        console.log("updating......");
+
+        setCurrentTime(videoRef?.current?.currentTime || 0);
+    };
 
     return (
         <div>
             <div className="video-player">
-                <video ref={videoRef} controls>
+                <video ref={videoRef} controls onTimeUpdate={handleTimeUpdate}>
                     <source src={source} type="video/mp4" />
                 </video>
-                <Controls videoRef={videoRef} chapters={chapters} />
+                <Controls videoRef={videoRef} currentTime={currentTime} chapters={chapters} setCurrentTime={setCurrentTime} />
             </div>
 
         </div>

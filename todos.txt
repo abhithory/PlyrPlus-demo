@@ -1,0 +1,7 @@
+- working seekbar perfectly
+- hide style fix
+- full screen fix
+- add chapter icon and show popup
+
+
+- add video quality

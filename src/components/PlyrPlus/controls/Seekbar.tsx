@@ -7,55 +7,13 @@ type ControlsProps = {
     chapters?: VideoChapter[],
     duration: number;
     currentTime: number;
+    setCurrentTime: (newTime: number) => void;
 }
 
-function Seekbar({ videoRef, chapters, duration, currentTime }: ControlsProps) {
-
+function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime }: ControlsProps) {
     const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
     const isDraggingRef = useRef(false); // Use a ref for dragging state
     const maxChapterIndex = chapters?.length && chapters.length - 1 || 0;
-
-
-
-
-    const handleSeek = (e: any) => {
-        if (!videoRef?.current) return
-        const seekBar = e.currentTarget;
-        const boundingRect = seekBar.getBoundingClientRect();
-        const offsetX = e.clientX - boundingRect.left;
-        const clickX = offsetX / boundingRect.width;
-        const newTime = clickX * duration;
-        videoRef.current.currentTime = newTime;
-
-        const index = getChapterIndexFromSecounds(newTime);
-
-        setCurrentChapterIndex(index >= 0 ? index : 0);
-    };
-
-    const handleSeekMouseDown = () => {
-        isDraggingRef.current = true;
-        document.addEventListener("mouseup", handleSeekMouseUp);
-        document.addEventListener("mousemove", handleSeekMouseMove);
-    };
-    const handleSeekMouseUp = () => {
-        isDraggingRef.current = false;
-        document.removeEventListener("mousemove", handleSeekMouseMove);
-        document.removeEventListener("mouseup", handleSeekMouseUp);
-    };
-
-    const handleSeekMouseMove = (e: any) => {
-        if (!videoRef?.current) return
-        handleSeekHover(e)
-        if (!isDraggingRef.current) return;
-        const seekBarElement = document.getElementById("seekbar_container");
-        if (!seekBarElement) return
-        const boundingRect = seekBarElement.getBoundingClientRect();
-        const offsetX = e.clientX - boundingRect.left;
-        const clickX = offsetX / boundingRect.width;
-        const newTime = clickX * duration;
-        videoRef.current.currentTime = newTime;
-        // setCurrentTime(newTime); // Update the current time in real-time
-    };
 
     const handleSeekHover = (e: any) => {
         const seekBarElement = document.getElementById("seekbar_container");
@@ -150,30 +108,72 @@ function Seekbar({ videoRef, chapters, duration, currentTime }: ControlsProps) {
         return -1;
     };
 
-    const handleSeekHoverEnter = () => {
-        const hoverTimeIndicator: HTMLElement | null = document.querySelector(".hover-time-indicator");
-        if (!hoverTimeIndicator) return
-        hoverTimeIndicator.style.display = "flex";
+    const handleOnMouseMove = (e: any) => {
+        if (!videoRef?.current) return
+        handleSeekHover(e)
+        if (!isDraggingRef.current) return;
+        const seekBarElement = document.getElementById("seekbar_container");
+        if (!seekBarElement) return
+        const boundingRect = seekBarElement.getBoundingClientRect();
+        const offsetX = e.clientX - boundingRect.left;
+        const clickX = offsetX / boundingRect.width;
+        const newTime = clickX * duration;
+        videoRef.current.currentTime = newTime;
+        setCurrentTime(newTime); // Update the current time in real-time
     };
 
-    const handleSeekHoverLeave = () => {
+
+    const handleOnHoverLeave = () => {
         const hoverTimeIndicator: HTMLElement | null = document.querySelector(".hover-time-indicator");
         if (!hoverTimeIndicator) return
         hoverTimeIndicator.style.display = "none";
     };
 
+    const handleOnHoverEnter = () => {
+        const hoverTimeIndicator: HTMLElement | null = document.querySelector(".hover-time-indicator");
+        if (!hoverTimeIndicator) return
+        hoverTimeIndicator.style.display = "flex";
+    };
+
+    const handleOnMouseUp = () => {
+        isDraggingRef.current = false;
+        document.removeEventListener("mousemove", handleOnMouseMove);
+        document.removeEventListener("mouseup", handleOnMouseUp);
+    };
+
+    const handleOnMouseDown = () => {
+        isDraggingRef.current = true;
+        document.addEventListener("mouseup", handleOnMouseUp);
+        document.addEventListener("mousemove", handleOnMouseMove);
+    };
+
+
+    const handleOnClickSeek = (e: any) => {
+        if (!videoRef?.current) return
+        const seekBar = e.currentTarget;
+        const boundingRect = seekBar.getBoundingClientRect();
+        const offsetX = e.clientX - boundingRect.left;
+        const clickX = offsetX / boundingRect.width;
+        const newTime = clickX * duration;
+        videoRef.current.currentTime = newTime;
+        setCurrentTime(newTime); // Update the current time in real-time
+
+
+        const index = getChapterIndexFromSecounds(newTime);
+        setCurrentChapterIndex(index >= 0 ? index : 0);
+    };
 
 
     return (
         <div
             className="seekbar-container"
             id="seekbar_container"
-            onClick={handleSeek}
-            onMouseDown={handleSeekMouseDown}
-            onMouseMove={handleSeekMouseMove}
-            onMouseUp={handleSeekMouseUp}
-            onMouseEnter={handleSeekHoverEnter}
-            onMouseLeave={handleSeekHoverLeave}
+            onClick={handleOnClickSeek}
+            onMouseDown={handleOnMouseDown}
+            onMouseMove={handleOnMouseMove}
+            onMouseUp={handleOnMouseUp}
+            onMouseEnter={handleOnHoverEnter}
+            onMouseLeave={handleOnHoverLeave}
 
         >
             <div className="hover-time-indicator">
@@ -183,7 +183,6 @@ function Seekbar({ videoRef, chapters, duration, currentTime }: ControlsProps) {
 
             {chapters?.map((item) => {
                 const chapterPercent = getChapeterLengthPercent(item.index);
-                console.log("chapterPercent", chapterPercent);
                 return (
                     <div
                         className="seekbar-section"

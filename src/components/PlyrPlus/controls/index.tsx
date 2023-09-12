@@ -6,38 +6,17 @@ import Seekbar from './Seekbar';
 
 type ControlsProps = {
     videoRef: React.RefObject<HTMLVideoElement>
-    chapters?: VideoChapter[]
+    chapters?: VideoChapter[];
+    currentTime: number;
+    setCurrentTime: (newTime: number) => void;
 }
 
-function Controls({ videoRef, chapters }: ControlsProps) {
+function Controls({ videoRef, chapters, currentTime, setCurrentTime }: ControlsProps) {
     const duration = videoRef?.current?.duration || 0;
-    const currentTime = videoRef?.current?.currentTime || 0;
-    const [isPlaying, setIsPlaying] = useState(false);
-
-    const togglePlayPause = () => {
-        if (!videoRef?.current) return
-
-        if (videoRef?.current.paused) {
-            videoRef?.current.play();
-            setIsPlaying(true);
-        } else {
-            videoRef?.current.pause();
-            setIsPlaying(false);
-        }
-    };
-
 
     return (
         <div className="video-controls">
-            <Seekbar duration={duration} currentTime={currentTime} videoRef={videoRef} chapters={chapters} />
-            {/* <div className="other-controls">
-                <button onClick={togglePlayPause}>
-                    {isPlaying ? "Pause" : "Play"}
-                </button>
-                <p>
-                    Chapter: {chapters && chapters[currentChapterIndex].chapterName || 0}
-                </p>
-            </div> */}
+            <Seekbar duration={duration} currentTime={currentTime} videoRef={videoRef} chapters={chapters} setCurrentTime={setCurrentTime} />
         </div>
     )
 }
