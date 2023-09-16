@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useRef, useState } from 'react';
 
-import { PlyrPlus } from "plyrplus"
+import { PlyrPlus } from 'plyrplus';
 
 
 
@@ -75,10 +75,14 @@ export default function Home() {
         <h1 className='text_heading_size mt-6 mb-12'>PlyrPlus</h1>
       </div>
 
-      {shouldPlay &&
-        <PlyrPlus source={sourceURL} chapters={allChapters} style={{
-        }} />
-      }
+      <div className="flex flex-col items-center justify-center">
+
+
+        {shouldPlay &&
+          <PlyrPlus source={sourceURL} chapters={allChapters} style={{
+          }} />
+        }
+      </div>
 
       <div className="flex flex-col  items-center mt-12">
 
