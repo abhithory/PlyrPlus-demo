@@ -110,8 +110,7 @@ video::-webkit-media-controls-time-remaining-display {
   margin: 0 0.05rem;
   transition: all 0.1s;
 }
-.seekbar-section:hover {
-  cursor: pointer;
+.seekbar-section.active {
   height: 220%;
 }
 

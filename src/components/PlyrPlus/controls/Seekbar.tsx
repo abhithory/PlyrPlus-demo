@@ -8,11 +8,12 @@ type ControlsProps = {
     duration: number;
     currentTime: number;
     setCurrentTime: (newTime: number) => void;
+    currentChapterIndex: number;
     setCurrentChapterIndex: (index: number) => void;
 
 }
 
-function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime, setCurrentChapterIndex }: ControlsProps) {
+function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime, setCurrentChapterIndex, currentChapterIndex }: ControlsProps) {
     const isDraggingRef = useRef(false); // Use a ref for dragging state
     const maxChapterIndex = chapters?.length && chapters.length - 1 || 0;
 
@@ -20,7 +21,11 @@ function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime, se
         const seekBarElement = document.getElementById("seekbar_container");
         if (!seekBarElement) return
         const boundingRect = seekBarElement.getBoundingClientRect();
-        const offsetX = e.clientX - boundingRect.left;
+        const isTouch = e.touches && e.touches.length > 0;
+        const clientX = isTouch ? e.touches[0].clientX : e.clientX;
+        const offsetX = clientX - boundingRect.left;
+
+
         const clickX = offsetX / boundingRect.width;
         const newTime = clickX * duration;
         const formattedTime = formatTimeToString(newTime); // Implement the formatTime function
@@ -111,8 +116,13 @@ function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime, se
         const seekBarElement = document.getElementById("seekbar_container");
         if (!seekBarElement) return
         const boundingRect = seekBarElement.getBoundingClientRect();
-        const offsetX = e.clientX - boundingRect.left;
+        const isTouch = e.touches && e.touches.length > 0;
+        const clientX = isTouch ? e.touches[0].clientX : e.clientX;
+
+        const offsetX = clientX - boundingRect.left;
         const clickX = offsetX / boundingRect.width;
+
+
         const newTime = clickX * duration;
         seekToTime(newTime)
     };
@@ -157,23 +167,53 @@ function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime, se
     const seekToTime = (newTime: number) => {
         if (!videoRef?.current) return
 
-        videoRef.current.currentTime = newTime;
-        setCurrentTime(newTime); // Update the current time in real-time
+        console.log("newTime", newTime);
+
+        if (!isNaN(newTime) && isFinite(newTime) && newTime >= 0 && newTime <= duration) {
+
+            videoRef.current.currentTime = newTime;
+            setCurrentTime(newTime); // Update the current time in real-time
 
 
-        const index = getChapterIndexFromSecounds(newTime);
-        setCurrentChapterIndex(index >= 0 ? index : 0);
+            const index = getChapterIndexFromSecounds(newTime);
+            setCurrentChapterIndex(index >= 0 ? index : 0);
+        }
     }
 
+
+
+    const [isAnyChapterActive, setIsAnyChapterActive] = useState(false);
+
+
+    const setChapterActive = () => {
+
+        if (isDraggingRef.current) {
+            setIsAnyChapterActive(true);
+        }
+    };
+
+    const setChapterNotActive = () => {
+        setIsAnyChapterActive(false);
+    }
 
     return (
         <div
             className="seekbar-container"
             id="seekbar_container"
             onClick={handleOnClickSeek}
-
+            onTouchStart={() => {
+                handleOnMouseDown()
+                handleOnHoverEnter()
+            }}
             onMouseDown={handleOnMouseDown}
+
+            onTouchMove={handleOnMouseMove}
             onMouseMove={handleOnMouseMove}
+
+            onTouchEnd={() => {
+                handleOnMouseUp()
+                handleOnHoverLeave()
+            }}
             onMouseUp={handleOnMouseUp}
             onMouseEnter={handleOnHoverEnter}
             onMouseLeave={handleOnHoverLeave}
@@ -188,10 +228,25 @@ function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime, se
                 const chapterPercent = getChapeterLengthPercent(item.index);
                 return (
                     <div
-                        className="seekbar-section"
                         style={{ width: `${chapterPercent}%` }}
                         key={item.index}
+                        className={`seekbar-section ${isAnyChapterActive && (item.index === currentChapterIndex) ? 'active' : ''}`}
+                        onTouchStart={() => {
+                            item.index
+                        }}
+
+                        onTouchMove={setChapterActive}
+                        onMouseMove={setChapterActive}
+
+                        onTouchEnd={setChapterNotActive}
+                        // onMouseDown={setChapterActive}
+                        onMouseUp={setChapterNotActive}
+                        // onMouseEnter={setChapterNotActive}
+                        onMouseLeave={setChapterNotActive}
                     >
+
+
+
                         <div
                             className="seekbar-progress"
                             style={{ width: `${getProgressChapterWidth(item.index)}%` }}

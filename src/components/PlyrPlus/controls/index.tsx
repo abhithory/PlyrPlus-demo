@@ -27,7 +27,7 @@ function Controls({ videoRef, chapters, currentTime, setCurrentTime, isControlsV
                 </div>
             </div>
             <div className={`video-controls ${!isControlsVisible && "hidden"}`}>
-                <Seekbar duration={duration} currentTime={currentTime} videoRef={videoRef} chapters={chapters} setCurrentTime={setCurrentTime} setCurrentChapterIndex={setCurrentChapterIndex} />
+                <Seekbar duration={duration} currentTime={currentTime} videoRef={videoRef} chapters={chapters} setCurrentTime={setCurrentTime} setCurrentChapterIndex={setCurrentChapterIndex} currentChapterIndex={currentChapterIndex} />
             </div>
         </>
     )
