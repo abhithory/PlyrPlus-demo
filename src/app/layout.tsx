@@ -1,6 +1,5 @@
 import './globals.css'
-import './plyrplus.css'
-
+import 'plyrplus/dist/plyrplus.css';
 
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'

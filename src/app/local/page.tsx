@@ -1,11 +1,12 @@
 "use client"
+import PlyrPlus from '@/components/PlyrPlus/PlyrPlus'
+import { VideoChapter } from '@/utils/type/PlyrPlus';
+import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react';
 
-import { PlyrPlus } from "plyrplus"
 
 
-
-const chaptersData = [
+const chaptersData: VideoChapter[] = [
   {
     index: 0,
     timestamp: "00:00",
@@ -76,8 +77,7 @@ export default function Home() {
       </div>
 
       {shouldPlay &&
-        <PlyrPlus source={sourceURL} chapters={allChapters} style={{
-        }} />
+        <PlyrPlus source={sourceURL} chapters={allChapters} />
       }
 
       <div className="flex flex-col  items-center mt-12">
@@ -113,7 +113,7 @@ export default function Home() {
                 setShouldPlay(false)
 
                 if (allChaptersRef?.current?.value) {
-                  setAllChapters(JSON.parse(allChaptersRef?.current?.value))
+                  setAllChapters(JSON.parse(allChaptersRef?.current?.value) as VideoChapter[])
                   setTimeout(() => {
                     setShouldPlay(true)
                   }, 0);
