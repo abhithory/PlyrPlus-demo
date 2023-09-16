@@ -9,3 +9,8 @@ export function stringTimeToSeconds(timeString: string) {
     const [minutes, seconds] = timeString.split(":").map(Number);
     return minutes * 60 + seconds;
 }
+
+export function IsInMobile() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return isMobile;
+}

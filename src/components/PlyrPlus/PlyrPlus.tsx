@@ -4,6 +4,7 @@ import { VideoChapter } from '@/utils/type/PlyrPlus';
 
 import Hls from 'hls.js';
 import Controls from "./controls";
+import { IsInMobile } from "./utils/helper";
 
 
 type PlayerPlusProps = {
@@ -55,6 +56,17 @@ function PlyrPlus({ source, chapters }: PlayerPlusProps) {
         }
     }
 
+    let clickTimeOut: any;
+    const onTouchEndInContainer = () => {
+        clearTimeout(clickTimeOut);
+        clickTimeOut = setTimeout(() => {
+            if (!videoRef?.current?.paused) {
+                setIsControlsVisible(false);
+            }
+
+        }, 3000);
+    }
+
 
     const handleVideoLoaded = () => {
         setIsVideoLoaded(true);
@@ -70,12 +82,20 @@ function PlyrPlus({ source, chapters }: PlayerPlusProps) {
     const handleTimeUpdate = () => {
         setCurrentTime(videoRef?.current?.currentTime || 0);
     };
+
+
+
+
     return (
         <div>
             <div className="plyrPlus__container"
                 ref={videoContainerRef}
+                onTouchStart={onMouseEnterInContainer}
                 onMouseEnter={onMouseEnterInContainer}
+
                 onMouseLeave={onMouseLeaveInContainer}
+                onTouchMove={onMouseEnterInContainer}
+                onTouchEnd={onTouchEndInContainer}
             >
                 <video ref={videoRef}
                     onTimeUpdate={handleTimeUpdate}
@@ -84,6 +104,12 @@ function PlyrPlus({ source, chapters }: PlayerPlusProps) {
                     onLoadedMetadata={handleVideoLoaded}
                     controls
                     controlsList="nodownload"
+                    onTouchStart={onMouseEnterInContainer}
+                    onPlay={() => {
+                        if (IsInMobile()) {
+                            onMouseLeaveInContainer()
+                        }
+                    }}
                 >
                     <source src={source} type="video/mp4" />
                 </video>

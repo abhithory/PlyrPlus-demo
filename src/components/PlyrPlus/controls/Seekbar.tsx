@@ -167,8 +167,6 @@ function Seekbar({ videoRef, chapters, duration, currentTime, setCurrentTime, se
     const seekToTime = (newTime: number) => {
         if (!videoRef?.current) return
 
-        console.log("newTime", newTime);
-
         if (!isNaN(newTime) && isFinite(newTime) && newTime >= 0 && newTime <= duration) {
 
             videoRef.current.currentTime = newTime;
